@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Love App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #c3aed6;
+      overflow: hidden;
+      user-select: none;
+      position: relative;
+    }
+
+    .section {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section.active {
+      display: flex;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      width: 320px;
+      height: 90px;
+      margin-top: 30px;
+    }
+
+    .button {
+      width: 140px;
+      height: 75px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.3rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .yes-button {
+      background-color: #4CAF50;
+      box-shadow: 0 5px 10px rgba(76, 175, 80, 0.6);
+    }
+
+    .no-button {
+      background-color: #f44336;
+      box-shadow: 0 5px 10px rgba(244, 67, 54, 0.6);
+    }
+
+    .no-button:active,
+    .yes-button:active {
+      transform: scale(0.95);
+    }
+
+    .gif {
+      width: 200px;
+      margin-bottom: 20px;
+      pointer-events: none;
+    }
+
+    .love-letter {
+      max-width: 90%;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 20px;
+      color: #4b2e83;
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    /* Heart Rain */
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/49/Red_Heart.svg');
+      background-size: cover;
+      animation: fall 6s linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Heart Rain -->
+  <div class="hearts" id="heartContainer"></div>
+
+  <!-- Page 1 -->
+  <div id="section1" class="section active">
+    <img src="https://media1.giphy.com/media/LLwnpuHEyVpGAwhJWO/giphy.gif" class="gif" />
+    <h1>Are you mad and tampo padin ba sakin love love ko🥺?</h1>
+    <div class="button-container">
+      <button class="button yes-button" onclick="goToSection(2)">Yes</button>
+      <button class="button no-button" id="noButtonSection1">No</button>
+    </div>
+  </div>
+
+  <!-- Page 2 -->
+  <div id="section2" class="section">
+    <img src="https://media0.giphy.com/media/5djIFnUhjCMcJPNduG/giphy.gif" class="gif" />
+    <h1>Aww, I'm so sorry my lovee 😢 Can we bati bati na po ba?</h1>
+    <div class="button-container" style="position: relative;">
+      <button class="button yes-button" id="yesButton2">Yes</button>
+      <button class="button no-button" id="noButtonSection2">No</button>
+    </div>
+  </div>
+
+  <!-- Page 3 -->
+  <div id="section3" class="section">
+    <img src="https://media1.giphy.com/media/IzXiddo2twMmdmU8Lv/giphy.gif" class="gif" />
+    <div class="love-letter">
+      <p>YEHEYYYYYYY!!!</p>
+      <p>Hi lovee, I just want to say, I'm very sorry po talaga sa nangyare kanina. Alam ko na nagalit ikaw at nagtampo sakin and sobrang sorry po talaga dun. Alam ko man na mali po ako dun sa part na yun and I'll take full responsibility for that po. Kaya don't worry my loveee kahit magkabati padin us, hinding hindi ako mapapagod na lambingin ka araw-araw at patunayan sayo na worth it ang lahat-lahat. At higit sa lahat, ipapakita at ipaparamdam ko sayo bawat segundo, minuto, oras, at araw na mahal na mahal na mahal kita ng sobra sobra! Thank you so much my love dahil sa binibigay mong pagmamahal at pagintindi sakin. Makakaasa ka na hinding hindi kita bibiguin sa mga desisyon na ginagawa mo para satin po!!! Mahal na mahal na mahal kita palagi my love! 💜</p>
+      <p>I love you so much palagi’t palagi my love! 💜💜💜</p>
+      <p style="font-weight: bold;">- Future Boyfriend/Husband</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function goToSection(num) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('section' + num).classList.add('active');
+    }
+
+    // 1st page "No" button - instantly goes to section 3
+    document.getElementById('noButtonSection1').addEventListener('click', () => {
+      goToSection(3);
+    });
+
+    // 2nd page "No" button - moves randomly when clicked
+    const noButtonSection2 = document.getElementById('noButtonSection2');
+    noButtonSection2.addEventListener('click', () => {
+      const vw = window.innerWidth - 140;
+      const vh = window.innerHeight - 75;
+      const newX = Math.random() * vw;
+      const newY = Math.random() * vh;
+      noButtonSection2.style.position = 'fixed';
+      noButtonSection2.style.left = `${newX}px`;
+      noButtonSection2.style.top = `${newY}px`;
+    });
+
+    // 2nd page "Yes" button
+    document.getElementById('yesButton2').addEventListener('click', () => {
+      goToSection(3);
+    });
+
+    // Heart Rain
+    const heartContainer = document.getElementById('heartContainer');
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+      heartContainer.appendChild(heart);
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+    setInterval(createHeart, 200);
+  </script>
+</body>
+</html>
