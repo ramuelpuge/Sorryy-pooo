@@ -1,201 +1,788 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sorry para sa aking baby</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background-color: #c3aed6;
-      overflow: hidden;
-      user-select: none;
-      position: relative;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale: 1.0">
+    <title>11-30-24</title>
+    <!-- Include Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include Google Font (e.g., Quicksand) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <!-- Include Poppins for buttons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-    .section {
-      display: none;
-      height: 100vh;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-      box-sizing: border-box;
-      position: relative;
-      z-index: 1;
-    }
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            background-color: #EBD6F9;
+        }
 
-    .section.active {
-      display: flex;
-    }
+        .section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            transition: opacity 1.5s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+            background-color: rgba(235, 214, 249, 0.8);
+        }
 
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      width: 320px;
-      height: 90px;
-      margin-top: 30px;
-    }
+        .section.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            z-index: 10;
+        }
 
-    .button {
-      width: 140px;
-      height: 75px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 1.3rem;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      transition: transform 0.3s ease;
-    }
+        #password-section { background-color: rgba(235, 214, 249, 0.9); }
+        #menu-section { background-color: rgba(235, 214, 249, 0.8); }
+        #profile-section { background-color: rgba(220, 200, 240, 0.85); }
+        #readme-section { background-color: rgba(200, 180, 230, 0.85); }
+        #memories-section { background-color: rgba(180, 160, 220, 0.85); }
 
-    .yes-button {
-      background-color: #4CAF50;
-      box-shadow: 0 5px 10px rgba(76, 175, 80, 0.6);
-    }
+        .scrollable-content {
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 40px;
+            width: 100%;
+            max-width: 950px;
+            box-sizing: border-box;
+            background-color: rgba(237, 233, 254, 0.85);
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            position: relative;
+            border: 3px solid rgba(192, 132, 252, 0.4);
+        }
 
-    .no-button {
-      background-color: #f44336;
-      box-shadow: 0 5px 10px rgba(244, 67, 54, 0.6);
-    }
+        .scrollable-content::-webkit-scrollbar {
+            width: 12px;
+        }
 
-    .no-button:active,
-    .yes-button:active {
-      transform: scale(0.95);
-    }
+        .scrollable-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
 
-    .gif {
-      width: 200px;
-      margin-bottom: 20px;
-      pointer-events: none;
-    }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.9);
+            border-radius: 10px;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+        }
 
-    .love-letter {
-      max-width: 90%;
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 12px;
-      padding: 20px;
-      color: #4b2e83;
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
+        .scrollable-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 1);
+        }
 
-    /* Heart Rain */
-    .hearts {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-    }
+        .image-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
 
-    .heart {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/49/Red_Heart.svg');
-      background-size: cover;
-      animation: fall 6s linear infinite;
-    }
+        .image-grid::-webkit-scrollbar {
+            height: 8px;
+        }
 
-    @keyframes fall {
-      0% {
-        transform: translateY(-50px);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh);
-        opacity: 0;
-      }
-    }
-  </style>
+        .image-grid::-webkit-scrollbar-track {
+            background: #f0eafa;
+            border-radius: 4px;
+        }
+
+        .image-grid::-webkit-scrollbar-thumb {
+            background: #b39ddb;
+            border-radius: 4px;
+        }
+
+        .image-grid img {
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 5px 5px 12px #cac6d3, -5px -5px 12px #fff;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: scale(0.5) rotate(-20deg);
+            animation: printImage 1.2s ease-out forwards;
+            animation-delay: var(--delay);
+            min-width: 150px;
+        }
+
+        .image-grid img:hover {
+            transform: scale(1.05);
+        }
+
+        .image-grid img.horizontal-image {
+            width: 300px;
+        }
+
+        .image-grid img.vertical-image {
+            width: 200px;
+        }
+
+        @keyframes printImage {
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .password-box-content {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .password-image-placeholder {
+            width: 150px;
+            height: 150px;
+            background-color: #d8b4fe;
+            border-radius: 50%; /* Make it a circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #fff;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(145deg, #c5cae9, #9fa8da); /* Pastel purple gradient */
+        }
+
+        .menu-button, .back-button, #submit-password {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.4s ease-in-out;
+            border: none;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #ffffff 0%, #f3e8ff 100%);
+            color: #6b21a8;
+            padding: 20px 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+            font-size: 1.35rem;
+            border: 2px solid #e9d5ff;
+            width: 220px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .menu-button:hover {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
+            transform: translateY(-5px) scale(1.03);
+            border-color: #d8b4fe;
+        }
+
+        #submit-password {
+            background: linear-gradient(135deg, #b39ddb 0%, #7e57c2 100%); /* Pastel purple gradient */
+            color: white;
+            padding: 16px 45px;
+            border-radius: 50px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+            font-size: 1.25rem;
+            border: 2px solid #c4b5fd;
+        }
+
+        #submit-password:hover {
+            background: linear-gradient(135deg, #7e57c2 0%, #673ab7 100%); /* Darker pastel purple on hover */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+            transform: translateY(-3px);
+            border-color: #a78bfa;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #d8b4fe 0%, #c084fc 100%);
+            color: #5b21b6;
+            padding: 14px 35px;
+            border-radius: 50px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            font-size: 1.1rem;
+            border: 2px solid #e9d5ff;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #c084fc 0%, #a78bfa 100%);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+            transform: translateY(-3px);
+            border-color: #d8b4fe;
+        }
+
+        audio::-webkit-media-controls-panel {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+        audio::-webkit-media-controls-play-button {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+        audio::-webkit-media-controls-current-time-display {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+        audio::-webkit-media-controls-duration-display {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+        audio::-webkit-media-controls-timeline {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+        audio::-webkit-media-controls-volume-slider {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+        audio::-webkit-media-controls-mute-button {
+             display: none !important;
+            -webkit-appearance: none;
+        }
+         audio::-webkit-media-controls-fullscreen-button {
+             display: none !important;
+            -webkit-appearance: none;
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 20px;
+            }
+            .scrollable-content {
+                padding: 30px;
+                max-height: calc(100vh - 100px);
+            }
+            .image-grid img.horizontal-image {
+                width: 225px;
+            }
+            .image-grid img.vertical-image {
+                width: 150px;
+            }
+            .image-grid {
+                gap: 10px;
+            }
+            .password-image-placeholder {
+                width: 100px;
+                height: 100px;
+                font-size: 3rem;
+            }
+            .menu-button {
+                padding: 15px 25px;
+                font-size: 1.1rem;
+                width: 180px;
+                height: 70px;
+            }
+            #submit-password {
+                 padding: 14px 35px;
+                 font-size: 1.0rem;
+            }
+             .back-button {
+                 padding: 12px 30px;
+                 font-size: 1rem;
+             }
+             .profile-menu-buttons {
+                 flex-direction: column;
+                 gap: 20px;
+             }
+        }
+
+        #profile-section .section-content {
+            background: linear-gradient(145deg, #f0eafa, #dcd6f7);
+            border-radius: 40px;
+            box-shadow: 20px 20px 60px #cac6d3, -20px -20px 60px #fff;
+            padding: 50px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #profile-section .section-content h2 {
+            color: #7e57c2;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #profile-section .section-content img {
+            width: 180px;
+            height: 180px;
+            border: 5px solid #b39ddb;
+            box-shadow: 8px 8px 15px #cac6d3, -8px -8px 15px #fff;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #profile-section .section-content img:hover {
+            transform: scale(1.1);
+        }
+
+        #profile-section .section-content #days-counter {
+            color: #5e35b1;
+            font-size: 1.8rem;
+            margin-top: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #profile-section .section-content .profile-menu-buttons {
+            margin-top: 30px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 8px 8px 15px #cac6d3, -8px -8px 15px #fff;
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 10px 10px 20px #cac6d3, -10px -10px 20px #fff;
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 8px 8px 15px #cac6d3, -8px -8px 15px #fff;
+            }
+        }
+
+        #profile-section .section-content img {
+            animation: pulse 5s infinite;
+        }
+
+        #readme-section .section-content {
+            background: linear-gradient(145deg, #f0eafa, #dcd6f7);
+            border-radius: 40px;
+            box-shadow: 20px 20px 60px #cac6d3, -20px -20px 60px #fff;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            overflow: auto;
+        }
+
+        #readme-section .section-content h2 {
+            color: #7e57c2;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #readme-section .section-content p {
+            font-size: 1.1rem;
+            color: #5e35b1;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        #readme-section .section-content .back-button {
+            margin-top: 25px;
+        }
+
+        #memories-section .section-content {
+            background: linear-gradient(145deg, #f0eafa, #dcd6f7);
+            border-radius: 40px;
+            box-shadow: 20px 20px 60px #cac6d3, -20px -20px 60px #fff;
+            padding: 40px;
+            max-width: 1000px;
+            width: 95%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        #memories-section .section-content h2 {
+            color: #7e57c2;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #memories-section .section-content .image-grid {
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #memories-section .section-content .image-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        #memories-section .section-content .image-grid::-webkit-scrollbar-track {
+            background: #f0eafa;
+            border-radius: 4px;
+        }
+
+        #memories-section .section-content .image-grid::-webkit-scrollbar-thumb {
+            background: #b39ddb;
+            border-radius: 4px;
+        }
+
+        #memories-section .section-content .image-grid img {
+            border-radius: 15px;
+            box-shadow: 5px 5px 12px #cac6d3, -5px -5px 12px #fff;
+            min-width: 150px;
+        }
+
+        #memories-section .section-content .image-grid img.horizontal-image {
+            width: 300px;
+        }
+
+        #memories-section .section-content .image-grid img.vertical-image {
+            width: 200px;
+        }
+
+        #memories-section .section-content .back-button {
+            margin-top: 25px;
+        }
+
+        #memories-section .section-content .text-6xl {
+            color: #7e57c2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styles for the cute password section */
+        #password-section {
+            background: linear-gradient(145deg, #e0e0e0, #bdbdbd); /* Light gray background */
+        }
+
+        #password-section .bg-purple-200 {
+            background-color: rgba(225, 190, 231, 0.7); /* Pastel purple box */
+            border-color: #9575cd; /* Deeper pastel purple border */
+            box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff; /* Soft shadow */
+            border-radius: 30px; /* More rounded corners */
+            padding: 30px; /* More padding inside the box */
+        }
+
+        #password-section .text-4xl {
+            font-size: 3.5rem; /* Slightly larger title */
+            letter-spacing: 0.05em; /* Add letter spacing */
+        }
+
+        #password-section .text-purple-800 {
+            color: #673ab7; /* Deeper pastel purple title */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle text shadow */
+        }
+
+        #password-section .password-box-content {
+            flex-direction: column; /* Stack image and input on smaller screens */
+            align-items: center; /* Center items */
+        }
+
+        #password-section .password-image-placeholder {
+            width: 120px; /* Slightly smaller image */
+            height: 120px;
+            font-size: 3rem; /* Adjust icon size */
+            margin-bottom: 20px; /* More space below image */
+            box-shadow: 7px 7px 14px #bebebe, -7px -7px 14px #ffffff; /* Softer shadow */
+        }
+
+        #password-section input[type="password"] {
+            border-color: #9575cd; /* Pastel purple border */
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; /* Inner shadow */
+            text-align: center; /* Center text */
+            padding: 18px; /* More padding */
+            font-size: 1.3rem; /* Larger font size */
+            border-radius: 25px; /* Rounded input */
+            width: 250px; /* Fixed width */
+        }
+
+        #password-section input[type="password"]:focus {
+            border-color: #5e35b1; /* Darker purple on focus */
+            outline: none; /* Remove default outline */
+        }
+
+        #password-section #submit-password {
+            background: linear-gradient(135deg, #9fa8da 0%, #7e57c2 100%); /* Pastel purple button */
+            border-color: #b39ddb; /* Lighter purple border */
+            box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff; /* Button shadow */
+            padding: 18px 50px; /* More padding */
+            border-radius: 30px; /* Rounded button */
+            font-size: 1.2rem; /* Larger font */
+        }
+
+        #password-section #submit-password:hover {
+            background: linear-gradient(135deg, #7e57c2 0%, #673ab7 100%); /* Darker purple on hover */
+            border-color: #7e57c2; /* Match hover color */
+        }
+
+        #password-section #password-error {
+            color: #5e35b1; /* Darker purple error */
+            font-size: 1.1rem; /* Slightly larger error */
+            margin-top: 10px; /* More space */
+        }
+
+        /* Add a subtle animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #password-section .bg-purple-200 {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
 </head>
-<body>
-  <!-- Heart Rain -->
-  <div class="hearts" id="heartContainer"></div>
+<body style="background-color: #EBD6F9;" class="text-gray-800">
 
-  <!-- Page 1 -->
-  <div id="section1" class="section active">
-    <img src="https://media1.giphy.com/media/LLwnpuHEyVpGAwhJWO/giphy.gif" class="gif" />
-    <h1>Are you mad and tampo padin ba sakin love love ko🥺?</h1>
-    <div class="button-container">
-      <button class="button yes-button" onclick="goToSection(2)">Yes</button>
-      <button class="button no-button" id="noButtonSection1">No</button>
+    <div class="relative w-screen h-screen overflow-hidden">
+
+        <section id="password-section" class="section active">
+            <div class="bg-purple-200 p-10 rounded-2xl shadow-2xl text-center max-w-sm w-full border-4 border-purple-300">
+                <h2 class="text-4xl font-bold mb-8 text-purple-800 drop-shadow-md">Our Journey Together</h2>
+                <div class="password-box-content">
+                  <img src="key.jpg" alt="Key" class="password-image-placeholder" />
+                  <input type="password" id="password-input" class="flex-grow p-4 rounded-lg border-3 border-purple-400 focus:outline-none focus:border-purple-600 text-xl shadow-inner w-auto min-w-0" placeholder="••••">
+              </div>
+                <button id="submit-password" class="mt-8">Unlock</button>
+                <p id="password-error" class="text-red-600 font-semibold mt-4 hidden">Incorrect password. Please try again.</p>
+            </div>
+        </section>
+
+        <section id="menu-section" class="section">
+             <div class="bg-purple-200 p-8 rounded-xl shadow-xl text-center max-w-md w-full">
+                <h2 class="text-3xl font-bold mb-8 text-purple-800">Choose a Path</h2>
+                <div class="flex flex-col space-y-6 items-center">
+                    <button class="menu-button" data-target="profile-section">
+                        PROFILE
+                    </button>
+                    <button class="menu-button" data-target="readme-section">
+                        READ ME
+                    </button>
+                    <button class="menu-button" data-target="memories-section">
+                        OUR MEMORIES
+                    </button>
+                </div>
+             </div>
+        </section>
+
+        <section id="profile-section" class="section">
+          <div class="section-content">
+              <h2 class="">Our Profile</h2>
+              <img src="profile.jpg" alt="Profile Picture" class="rounded-full mx-auto mb-5 shadow-xl border-4 border-purple-400 animate-fade-in">
+              <div id="days-counter" class="text-3xl font-semibold mb-6 text-purple-700 animate-slide-up"></div>
+      
+              <div class="profile-menu-buttons flex justify-center mt-8 w-full">
+                  <button class="menu-button" data-target="profile-section" style="font-size: 1.1rem;">
+                      PROFILE 💏
+                  </button>
+                  <button class="menu-button" data-target="readme-section" style="font-size: 1.1rem;">
+                      READ ME 💌
+                  </button>
+                  <button class="menu-button" data-target="memories-section" style="font-size: 1.1rem;">
+                      OUR MEMORIES 🖼️
+                  </button>
+              </div>
+          </div>
+      </section>
+
+        <section id="readme-section" class="section">
+          <div class="section-content">
+              <h2 class="">To beautiful Ms.Tampororot</h2>
+              <p class="">I dedicate this song "Bawat Daan" sayo, because in this world, no matter how hard it gets for me, my path will always lead me back to where you are, at the end of my most tiring days, sayo ko lang gustong gusto palaging magpahinga. "Nahanap din kita" after all my silent battles alone, i can finally say i found you, im so lucky to have you always, now i can't imagine myself living without you. Also, i just want to say na you're my last risk i'm always willing to take no matter how far, how hard and challenging days for us, I will always stay in your side until my last breath my love! Gusto ko din sabihin sayo na, Kahit ipagtabuyan mo ako, kahit hindi muna ako mahal, at kahit inaayawan mo na ako, palagi't palagi lang po ako andito sa tabi mo to prove myself always and i will wait you no matter how long it takes for you to love me and choose me again, I will wait you my ms.tampororot! and last i want to say na every second, every minute, every hour, and every single day, I will always and forever love you no matter what happens to us, i will choose you palagi't palagi lovee koo, tandaan mo mapapagod ako sa mga nangyare natin, pero hindi ako mapapagod na piliin at mahalin ka palagi araw araw, at higit sa lahat hinding hindi ako nag sisisi na nakilala ka at dumating ka sa buhay ko. Thank you so much my love for loving me, caring me, and everything you've done to me. Im so thankful and grateful always because i'm so lucky to have you always! Sana balang araw piliin mo din na magstay sakin forever. I love you so much my Ms.tampororot! 💜 I hope one day sasagutin mo na ako palagi akong aasa sa mga sinasabi mo at palagi kitang aantayin. Mahal na mahal na mahal na mahal na mahal kita palagi't palagi my one and only beautiful, baby, bebe, cutie, kulet, honeybunch, love, Ms.tampororot ko!!! 💜💜💜</p>
+              <p class="text-right font-bold">Mr. Tampororot</p>
+              <button class="back-button mx-auto block">Back to Profile</button>
+          </div>
+      </section>
+
+        <section id="memories-section" class="section">
+            <div class="section-content">
+                <h2 class="">Our Memories 📸</h2>
+                <div class="text-center text-6xl mb-8 animate-bounce">💜💙</div>
+
+                <div id="image-grid" class="image-grid">
+                    <!-- Images will be added here by JavaScript -->
+                </div>
+                <button class="back-button mx-auto block">Back to Profile</button>
+            </div>
+        </section>
+
     </div>
-  </div>
 
-  <!-- Page 2 -->
-  <div id="section2" class="section">
-    <img src="https://media0.giphy.com/media/5djIFnUhjCMcJPNduG/giphy.gif" class="gif" />
-    <h1>Aww, I'm so sorry my lovee 😢 Can we bati bati na po ba?</h1>
-    <div class="button-container" style="position: relative;">
-      <button class="button yes-button" id="yesButton2">Yes</button>
-      <button class="button no-button" id="noButtonSection2">No</button>
-    </div>
-  </div>
+    <audio id="background-music" loop style="display: none;">
+        <source src="Bawat daan.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-  <!-- Page 3 -->
-  <div id="section3" class="section">
-    <img src="https://media1.giphy.com/media/IzXiddo2twMmdmU8Lv/giphy.gif" class="gif" />
-    <div class="love-letter">
-      <p>YEHEYYYYYYY!!!</p>
-      <p>Hi lovee, I just want to say, I'm very sorry po talaga sa nangyare kanina. Alam ko na nagalit ikaw at nagtampo sakin and sobrang sorry po talaga dun. Alam ko man na mali po ako dun sa part na yun and I'll take full responsibility for that po. Kaya don't worry my loveee kahit magkabati padin us, hinding hindi ako mapapagod na lambingin ka araw-araw at patunayan sayo na worth it ang lahat-lahat. At higit sa lahat, ipapakita at ipaparamdam ko sayo bawat segundo, minuto, oras, at araw na mahal na mahal na mahal kita ng sobra sobra! Thank you so much my love dahil sa binibigay mong pagmamahal at pagintindi sakin. Makakaasa ka na hinding hindi kita bibiguin sa mga desisyon na ginagawa mo para satin po!!! Mahal na mahal na mahal kita palagi my love! 💜</p>
-      <p>I love you so much palagi’t palagi my love! 💜💜💜</p>
-      <p style="font-weight: bold;">- Future Boyfriend/Husband</p>
-    </div>
-  </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section');
+            const passwordSection = document.getElementById('password-section');
+            const menuSection = document.getElementById('menu-section');
+            const profileSection = document.getElementById('profile-section');
+            const readmeSection = document.getElementById('readme-section');
+            const memoriesSection = document.getElementById('memories-section');
 
-  <!-- Scripts -->
-  <script>
-    function goToSection(num) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById('section' + num).classList.add('active');
-    }
+            const passwordInput = document.getElementById('password-input');
+            const submitPasswordBtn = document.getElementById('submit-password');
+            const passwordError = document.getElementById('password-error');
 
-    // 1st page "No" button - instantly goes to section 3
-    document.getElementById('noButtonSection1').addEventListener('click', () => {
-      goToSection(3);
-    });
+            const profileMenuButtons = profileSection.querySelectorAll('.menu-button');
+            const backButtons = document.querySelectorAll('.back-button');
 
-    // 2nd page "No" button - moves randomly when clicked
-    const noButtonSection2 = document.getElementById('noButtonSection2');
-    noButtonSection2.addEventListener('click', () => {
-      const vw = window.innerWidth - 140;
-      const vh = window.innerHeight - 75;
-      const newX = Math.random() * vw;
-      const newY = Math.random() * vh;
-      noButtonSection2.style.position = 'fixed';
-      noButtonSection2.style.left = `${newX}px`;
-      noButtonSection2.style.top = `${newY}px`;
-    });
+            const daysCounter = document.getElementById('days-counter');
+            const backgroundMusic = document.getElementById('background-music');
 
-    // 2nd page "Yes" button
-    document.getElementById('yesButton2').addEventListener('click', () => {
-      goToSection(3);
-    });
 
-    // Heart Rain
-    const heartContainer = document.getElementById('heartContainer');
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
-      heartContainer.appendChild(heart);
-      setTimeout(() => {
-        heart.remove();
-      }, 6000);
-    }
-    setInterval(createHeart, 200);
-  </script>
+            const imageGrid = document.getElementById('image-grid');
+            const correctPassword = "113024";
+
+            const memoryImages = [
+                "image (1).jpg",
+                "image (2).jpg",
+                "image (3).jpg",
+                "image (4).jpg",
+                "image (5).jpg",
+                "image (6).jpg",
+                "image (7).jpg",
+                "image (8).jpg",
+                "image (9).jpg",
+                "image (10).jpg",
+                "image (11).jpg",
+                "image (12).jpg",
+                "image (13).jpg",
+                "image (14).jpg",
+                "image (15).jpg",
+                "image (16).jpg",
+                "image (17).jpg",
+                "image (18).jpg",
+                "image (19).jpg",
+                "image (20).jpg",
+                "image (21).jpg",
+                "image (22).jpg",
+                "image (23).jpg",
+                "image (24).jpg",
+                "image (25).jpg",
+                "image (26).jpg",
+                "image (33).jpg",
+                "image (34).jpg",
+                "image (35).jpg",
+                "image (36).jpg",
+                "image (31).jpg",
+                "image (32).jpg",
+                "image (27).jpg",
+                "image (28).jpg",
+                "image (29).jpg",
+                "image (30).jpg",
+                "image (37).jpg",
+                "image (38).jpg",
+                "image (39).jpg",
+                "image (40).jpg",
+                "image (41).jpg",
+                "image (42).jpg",
+                "image (43).jpg",
+                "image (1).png",
+                "image (2).png",
+                "image (3).png",
+                "image (44).jpg",
+                "image (45).jpg",
+                "image (46).jpg",
+                "image (47).jpg"
+            ];
+
+            function showSection(targetSection) {
+                sections.forEach(section => {
+                    if (section === targetSection) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+
+                if (targetSection === profileSection) {
+                    updateDaysCounter();
+                } else if (targetSection === memoriesSection) {
+                    displayImages();
+                }
+            }
+
+            submitPasswordBtn.addEventListener('click', () => {
+                if (passwordInput.value === correctPassword) {
+                    passwordError.style.display = 'none';
+                    showSection(profileSection);
+                    backgroundMusic.play().catch(error => {
+                        console.error("Music autoplay prevented:", error);
+                    });
+                } else {
+                    passwordError.style.display = 'block';
+                    passwordInput.value = '';
+                }
+            });
+
+            passwordInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    submitPasswordBtn.click();
+                }
+            });
+
+            profileMenuButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+
+                    if (targetSection) {
+                        showSection(targetSection);
+                    }
+                });
+            });
+
+            backButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    showSection(profileSection);
+                });
+            });
+
+            function updateDaysCounter() {
+                const startDate = new Date('2024-11-30');
+                const today = new Date();
+                const timeDiff = today.getTime() - startDate.getTime();
+                const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                daysCounter.textContent = `Together for ${daysDiff} days and counting! 💜`;
+            }
+
+            function displayImages() {
+                imageGrid.innerHTML = '';
+                let delay = 0;
+
+                memoryImages.forEach((imageUrl, index) => {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.alt = `Memory ${index + 1}`;
+                    img.style.setProperty('--delay', `${delay}s`);
+
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.onload = () => {
+                        if (image.width > image.height) {
+                            img.classList.add('horizontal-image');
+                        } else {
+                            img.classList.add('vertical-image');
+                        }
+                        imageGrid.appendChild(img);
+                        delay += 0.2;
+                    };
+                });
+            }
+
+            showSection(passwordSection);
+        });
+    </script>
+
 </body>
 </html>
